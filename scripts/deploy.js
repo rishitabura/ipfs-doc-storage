@@ -1,27 +1,58 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
+const { ethers, artifacts } = require("hardhat");
+const path = require("path");
+const fs = require("fs");
 const hre = require("hardhat");
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+  // Deploy the contracts
+  const [deployer] = await ethers.getSigners();
+  console.log("Deploying contracts with the account:", await deployer.getAddress());
 
-  const lockedAmount = hre.ethers.parseEther("0.001");
+  
 
-  const lock = await hre.ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
 
-  await lock.waitForDeployment();
+  const userdep = await deployContract("UserInfo");
+  const docdep = await deployContract("DocStorage");
 
-  console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
+  // Save frontend files
+  saveFrontendFiles(userdep, docdep);
+
+  console.log(`User Contract deployed to ${userdep.target}`);
+  console.log(`Doc Contract deployed to ${docdep.target}`);
+}
+
+async function deployContract(contractName) {
+  
+  //const factory = await ethers.getContractFactory(contractName);
+  const contract  = await ethers.deployContract(contractName);
+  //const contract = await factory.deploy();
+  await contract.waitForDeployment();
+  return contract;
+}
+
+function saveFrontendFiles(userdep, docdep) {
+  const contractsDir = path.join(__dirname, "/../client/src/contracts");
+
+  if (!fs.existsSync(contractsDir)) {
+    fs.mkdirSync(contractsDir);
+  }
+
+  fs.writeFileSync(
+    contractsDir + "/contract-address.json",
+    JSON.stringify({ userdep: userdep.target, docdep: docdep.target }, null, 2)
+  );
+
+  const UserArtifact = artifacts.readArtifactSync("UserInfo");
+  const DocArtifact = artifacts.readArtifactSync("DocStorage");
+
+  fs.writeFileSync(
+    contractsDir + "/UserDep.json",
+    JSON.stringify(UserArtifact, null, 2)
+  );
+
+  fs.writeFileSync(
+    contractsDir + "/DocDep.json",
+    JSON.stringify(DocArtifact, null, 2)
   );
 }
 

@@ -9,13 +9,14 @@ import "../styles/style.css";
 const Home=()=>
 {
     return(
-       <body className="Main">
-        <div className="container"><br/>
-        <h1 className="Title">Welcome to DocSafe</h1>
-        <h2 className="normaltext" style={{'text-align':'center'}}>Your Secure Document Vault powered by IPFS</h2>
-        </div>
-        </body>
        
+        <div className="home">
+        <h1>Welcome to DocSafe</h1>
+        <p>Your Secure Document Vault powered by IPFS</p>
+       
+        </div>
+
+
     )
         
 }

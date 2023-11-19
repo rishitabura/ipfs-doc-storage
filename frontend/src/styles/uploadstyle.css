@@ -65,37 +65,3 @@ input::file-selector-button:hover {
     margin-inline: 5%;
 }
 
-
-.uploadMain{
-    overflow: hidden;
-    width: 100%;
-    
-    background: #f8f8f8;
-    min-height: 100vh;
-    
-}
-
-.uploadnormaltext{
-    font-family: "Montessarat", sans-serif;
-    font-size: 16px;
-    padding: 2%;
-}
-
-.uploadcontainer{
-    width: 80%;
-    margin: 5%;
-    margin-inline: 5%;
-    background: white;
-    padding: 5%;
-    filter: drop-shadow(2px 2px 4px #b7b7b7);
-    display: block;
-    justify-content: center;
-    
-}
-
-
-.uploadTitle{
-    color: #091476;
-    font: Montessarat;
-    text-align: center;
-}
